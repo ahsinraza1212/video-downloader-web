@@ -1,0 +1,31 @@
+import type { ReactNode } from "react";
+
+export function Container({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`mx-auto w-full max-w-3xl px-4 sm:px-6 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+export function Card({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`rounded-[var(--radius-lg)] border border-border bg-surface ${className}`}
+    >
+      {children}
+    </div>
+  );
+}

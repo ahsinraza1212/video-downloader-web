@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Dark-first downloader theme (matches the reference look). */
+:root {
+  --background: #0a0a0c;
+  --surface: #141418;
+  --surface-2: #1c1c22;
+  --foreground: #ededf0;
+  --muted: #9a9aa5;
+  --border: #26262e;
+  --primary: #f97316;
+  --primary-foreground: #0a0a0c;
+  --ring: #f97316;
+  --radius: 0.9rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(60rem 40rem at 50% -10%, rgba(249, 115, 22, 0.08), transparent),
+    var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.prose-content {
+  line-height: 1.75;
+  color: var(--foreground);
+}
+.prose-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1.75rem 0 0.5rem;
+}
+.prose-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.4rem;
+}
+.prose-content p {
+  margin-bottom: 0.9rem;
+  color: var(--muted);
+}
