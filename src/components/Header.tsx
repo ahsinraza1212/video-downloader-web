@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site";
 import { platforms } from "@/lib/platforms";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Header() {
   return (
@@ -12,17 +13,20 @@ export function Header() {
           </span>
           <span className="text-lg">{siteConfig.name}</span>
         </Link>
-        <nav className="hidden items-center gap-1 md:flex">
-          {platforms.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/download/${p.slug}`}
-              className="rounded-md px-3 py-2 text-sm text-muted transition-colors hover:bg-surface hover:text-foreground"
-            >
-              {p.name}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-2">
+          <nav className="hidden items-center gap-1 lg:flex">
+            {platforms.slice(0, 6).map((p) => (
+              <Link
+                key={p.slug}
+                href={`/download/${p.slug}`}
+                className="rounded-md px-3 py-2 text-sm text-muted transition-colors hover:bg-surface hover:text-foreground"
+              >
+                {p.name}
+              </Link>
+            ))}
+          </nav>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

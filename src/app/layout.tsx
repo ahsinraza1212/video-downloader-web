@@ -5,6 +5,7 @@ import { siteConfig } from "@/lib/site";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdSlot } from "@/components/AdSlot";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 // Adsterra Social Bar / Popunder: a single site-wide invoke script.
 const socialBarSrc = process.env.NEXT_PUBLIC_ADSTERRA_SOCIALBAR_SRC;
@@ -21,7 +22,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0c",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f6f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#0e1116" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
@@ -32,8 +36,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-sans">
+        <ThemeProvider>
         <Header />
         {/* Content + side ad rails (rails hidden on smaller screens). */}
         <div className="mx-auto flex max-w-[88rem] justify-center gap-6 px-4 py-8">
@@ -60,6 +65,7 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
+        </ThemeProvider>
       </body>
     </html>
   );

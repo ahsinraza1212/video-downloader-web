@@ -34,6 +34,7 @@ export function Downloader({ placeholder }: { placeholder?: string }) {
   const [error, setError] = useState("");
   const [info, setInfo] = useState<MediaInfo | null>(null);
   const [playlist, setPlaylist] = useState<PlaylistResult | null>(null);
+  const [mode, setMode] = useState<"video" | "audio" | "subs">("video");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,6 +75,26 @@ export function Downloader({ placeholder }: { placeholder?: string }) {
     <div className="w-full">
       <Card className="p-5 sm:p-6">
         <form onSubmit={onSubmit} className="space-y-3">
+          {!bulk && (
+            <div className="flex justify-center">
+              <div className="inline-flex gap-1 rounded-lg bg-surface-2 p-1">
+                {(["video", "audio", "subs"] as const).map((m) => (
+                  <button
+                    type="button"
+                    key={m}
+                    onClick={() => setMode(m)}
+                    className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                      mode === m
+                        ? "bg-surface text-primary shadow-sm"
+                        : "text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {m === "video" ? "Video" : m === "audio" ? "Audio (MP3)" : "Subtitles"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <label htmlFor="url" className="block text-sm font-medium">
             Paste a video {bulk ? "playlist " : ""}link
           </label>
@@ -114,7 +135,7 @@ export function Downloader({ placeholder }: { placeholder?: string }) {
       </Card>
 
       {error && (
-        <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+        <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-600 dark:text-red-400">
           {error}
         </div>
       )}
@@ -143,45 +164,53 @@ export function Downloader({ placeholder }: { placeholder?: string }) {
           </div>
 
           <div className="border-t border-border p-5">
-            <h3 className="mb-3 text-sm font-semibold">Choose a format</h3>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {qualities &&
-                qualities.map((q) => (
-                  <button
-                    key={`v-${q}`}
-                    onClick={() =>
-                      triggerDownload(
-                        downloadUrl({
-                          url: url.trim(),
-                          type: "video",
-                          quality: q || undefined,
-                        }),
-                      )
-                    }
-                    className="rounded-lg border border-border bg-surface-2 px-3 py-2.5 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
-                  >
-                    {q ? `${q}p` : "Best"} MP4
-                  </button>
-                ))}
+            {mode === "video" && (
+              <>
+                <h3 className="mb-3 text-sm font-semibold">Choose a quality</h3>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {qualities &&
+                    qualities.map((q) => (
+                      <button
+                        key={`v-${q}`}
+                        onClick={() =>
+                          triggerDownload(
+                            downloadUrl({
+                              url: url.trim(),
+                              type: "video",
+                              quality: q || undefined,
+                            }),
+                          )
+                        }
+                        className="rounded-lg border border-border bg-surface-2 px-3 py-2.5 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
+                      >
+                        {q ? `${q}p` : "Best"} MP4
+                      </button>
+                    ))}
+                </div>
+              </>
+            )}
+            {mode === "audio" && (
               <button
                 onClick={() =>
                   triggerDownload(downloadUrl({ url: url.trim(), type: "audio" }))
                 }
-                className="rounded-lg border border-border bg-surface-2 px-3 py-2.5 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
+                className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
-                🎵 MP3 Audio
+                🎵 Download MP3
               </button>
+            )}
+            {mode === "subs" && (
               <button
                 onClick={() =>
                   triggerDownload(
                     downloadUrl({ url: url.trim(), type: "subs", lang: "en" }),
                   )
                 }
-                className="rounded-lg border border-border bg-surface-2 px-3 py-2.5 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
+                className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
-                📝 Subtitles
+                📝 Download Subtitles (English)
               </button>
-            </div>
+            )}
           </div>
         </Card>
       )}

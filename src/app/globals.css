@@ -1,17 +1,46 @@
 @import "tailwindcss";
 
-/* Dark-first downloader theme (matches the reference look). */
+/* "Clean Utility" theme — light by default, teal accent. Dark variant via the
+   .dark class (set by next-themes) with a prefers-color-scheme fallback. */
 :root {
-  --background: #0a0a0c;
-  --surface: #141418;
-  --surface-2: #1c1c22;
-  --foreground: #ededf0;
-  --muted: #9a9aa5;
-  --border: #26262e;
-  --primary: #f97316;
-  --primary-foreground: #0a0a0c;
-  --ring: #f97316;
-  --radius: 0.9rem;
+  --background: #f7f6f3; /* warm off-white */
+  --surface: #ffffff;
+  --surface-2: #eceae5;
+  --foreground: #17181c;
+  --muted: #5b616b;
+  --border: #e0ded8;
+  --primary: #0f766e; /* teal-700 */
+  --primary-foreground: #ffffff;
+  --ring: #0f766e;
+  --radius: 0.85rem;
+}
+
+.dark {
+  --background: #0e1116;
+  --surface: #161b22;
+  --surface-2: #21262d;
+  --foreground: #e6edf3;
+  --muted: #9198a1;
+  --border: #2a313a;
+  --primary: #2dd4bf; /* teal-400, reads well on dark */
+  --primary-foreground: #04231f;
+  --ring: #2dd4bf;
+}
+
+/* No-JS / pre-hydration fallback: honor the OS preference. next-themes then
+   stamps .light / .dark before paint so the toggle wins. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0e1116;
+    --surface: #161b22;
+    --surface-2: #21262d;
+    --foreground: #e6edf3;
+    --muted: #9198a1;
+    --border: #2a313a;
+    --primary: #2dd4bf;
+    --primary-foreground: #04231f;
+    --ring: #2dd4bf;
+  }
 }
 
 @theme inline {
@@ -35,12 +64,11 @@
 
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
 }
 
 body {
   background:
-    radial-gradient(60rem 40rem at 50% -10%, rgba(249, 115, 22, 0.08), transparent),
+    radial-gradient(55rem 32rem at 50% -8rem, color-mix(in srgb, var(--primary) 10%, transparent), transparent),
     var(--background);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
