@@ -13,23 +13,26 @@ export interface SeoInput {
 export function buildMetadata(input: SeoInput): Metadata {
   const { title, description, path, keywords, noindex = false } = input;
   const canonical = absoluteUrl(path);
-  const fullTitle =
-    title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
+  // Brand once. `absolute` bypasses the layout title.template so the brand is
+  // not appended twice (was producing "Title | GrabClip | GrabClip").
+  const brandedTitle = title.includes(siteConfig.name)
+    ? title
+    : `${title} | ${siteConfig.name}`;
 
   return {
-    title: fullTitle,
+    title: { absolute: brandedTitle },
     description,
     keywords,
     alternates: { canonical },
     robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
-      title: fullTitle,
+      title: brandedTitle,
       description,
       url: canonical,
       siteName: siteConfig.name,
       locale: siteConfig.locale,
       type: "website",
     },
-    twitter: { card: "summary_large_image", title: fullTitle, description },
+    twitter: { card: "summary_large_image", title: brandedTitle, description },
   };
 }

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Downloader } from "@/components/Downloader";
 import { AdSlot } from "@/components/AdSlot";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { buildMetadata } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/site";
 import { platforms, getPlatform } from "@/lib/platforms";
 
 export function generateStaticParams() {
@@ -38,7 +40,13 @@ export default async function PlatformPage({
 
   return (
     <>
-      <section className="text-center">
+      <Breadcrumbs
+        items={[
+          { name: "Home", path: "/" },
+          { name: p.name, path: `/download/${p.slug}` },
+        ]}
+      />
+      <section className="mt-4 text-center">
         <div className="text-4xl">{p.icon}</div>
         <h1 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
           {p.h1}
@@ -73,15 +81,28 @@ export default async function PlatformPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: p.faqs.map((f) => ({
-              "@type": "Question",
-              name: f.q,
-              acceptedAnswer: { "@type": "Answer", text: f.a },
-            })),
-          }),
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              name: p.h1,
+              description: p.description,
+              url: absoluteUrl(`/download/${p.slug}`),
+              applicationCategory: "MultimediaApplication",
+              operatingSystem: "Any",
+              browserRequirements: "Requires JavaScript",
+              offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: p.faqs.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
+            },
+          ]),
         }}
       />
     </>

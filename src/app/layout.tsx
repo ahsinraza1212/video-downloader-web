@@ -65,6 +65,28 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify([
+                {
+                  "@context": "https://schema.org",
+                  "@type": "Organization",
+                  name: siteConfig.name,
+                  url: siteConfig.url,
+                  description: siteConfig.description,
+                  logo: `${siteConfig.url}/icon.svg`,
+                },
+                {
+                  "@context": "https://schema.org",
+                  "@type": "WebSite",
+                  name: siteConfig.name,
+                  url: siteConfig.url,
+                  description: siteConfig.description,
+                },
+              ]),
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>
